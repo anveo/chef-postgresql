@@ -23,6 +23,11 @@ The following platforms are supported by this cookbook, meaning that the recipes
 * Ubuntu
 * Debian 6
 
+### Cookbooks
+
+* [apt](http://community.opscode.com/cookbooks/apt)
+* [dpkg_autostart](http://community.opscode.com/cookbooks/dpkg_autostart)
+
 
 ## Recipes
 
@@ -168,6 +173,19 @@ You may also set the contents of `pg_hba.conf` via attributes:
 }
 ```
 
+### Change APT distribution
+
+Currently the APT distributions are sourced from [http://apt.postgresql.org/pub/repos/apt/](http://apt.postgresql.org/pub/repos/apt/).
+In some cases this source might not immediately contain a package for the distribution of your target system.
+
+The `node["postgresql"]["apt_distribution"]` attribute can be used to install PostgreSQL from a different compatible
+distribution:
+
+```json
+"postgresql": {
+  "apt_distribution": "precise"
+}
+```
 
 ## Attributes
 
@@ -176,6 +194,7 @@ You may also set the contents of `pg_hba.conf` via attributes:
 # FILE LOCATIONS (see below) attributes *must* also be overridden in
 # order to re-compute the paths with the correct version number.
 default["postgresql"]["version"]                         = "9.2"
+default["postgresql"]["apt_distribution"]                = node["lsb"]["codename"]
 
 default["postgresql"]["environment_variables"]           = {}
 default["postgresql"]["pg_ctl_options"]                  = ""
@@ -530,6 +549,13 @@ default["postgresql"]["databases"]                       = []
 #------------------------------------------------------------------------------
 
 default["postgresql"]["custom_variable_classes"]         = ""
+
+
+#------------------------------------------------------------------------------
+# POSTGIS OPTIONS
+#------------------------------------------------------------------------------
+
+default["postgis"]["version"] = "2.0"
 ```
 
 
@@ -580,13 +606,19 @@ Many thanks go to the following who have contributed to making this cookbook eve
     * add `pg_database_extensions` definition
 * **[@ermolaev](https://github.com/ermolaev)**
     * improve platform check for source repo
+    * support debian 7 (wheezy)
 * **[@escobera](https://github.com/escobera)**
     * fix for missing ssl directives in `postgresql.conf`
 * **[@cdoughty77](https://github.com/cdoughty77)**
     * allow finer tuning inside pg_hba.conf file
 * **[@NOX73](https://github.com/NOX73)**
     * fix `postgresql.conf` ssl parameter failure on 9.1
-
+* **[@navinpeiris](https://github.com/navinpeiris)**
+    * add ability to configure apt distribution
+* **[@michihuber](https://github.com/michihuber)**
+    * create data/config dirs recursively
+* **[@sethcall](https://github.com/sethcall)**
+    * allow 'lazy' evaluation of configs in the custom template
 
 
 ## License

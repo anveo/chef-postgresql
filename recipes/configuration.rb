@@ -6,6 +6,12 @@
 
 pg_version = node["postgresql"]["version"]
 
+directory "/etc/postgresql/#{pg_version}/main/" do
+  owner  "postgres"
+  group  "postgres"
+  recursive true
+end
+
 # environment
 template "/etc/postgresql/#{pg_version}/main/environment" do
   source "environment.erb"
@@ -49,7 +55,6 @@ template "/etc/postgresql/#{pg_version}/main/postgresql.conf" do
   owner  "postgres"
   group  "postgres"
   mode   "0644"
-  variables(:configuration => node["postgresql"]["conf"])
   notifies :restart, "service[postgresql]"
 end
 
