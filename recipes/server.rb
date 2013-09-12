@@ -6,8 +6,16 @@
 include_recipe "postgresql"
 
 # don't auto-start the service to allow custom configuration
-dpkg_autostart "postgresql" do
-  allow false
+#dpkg_autostart "postgresql" do
+#  allow false
+#end
+
+file "/usr/sbin/policy-rc.d" do
+  mode 0755
+  owner "root"
+  group "root"
+  content "#!/bin/sh\nexit 101"
+  not_if "dpkg -s postgresql-#{node["postgresql"]["version"]}"
 end
 
 # install the package
